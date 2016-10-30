@@ -653,11 +653,15 @@ mono_unwind_cleanup (void)
 		g_free (cached);
 	}
 	g_free (cached_info);
+	cached_info = NULL;
+	cached_info_next = 0;
+	cached_info_size = 0;
 
 	for (GSList *cursor = cached_info_list; cursor != NULL; cursor = cursor->next)
 		g_free (cursor->data);
 
 	g_slist_free (cached_info_list);
+	cached_info_list = NULL;
 }
 
 /*

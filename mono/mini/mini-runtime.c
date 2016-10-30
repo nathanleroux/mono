@@ -505,6 +505,7 @@ mono_tramp_info_cleanup (void)
 		mono_tramp_info_free (info);
 	}
 	g_slist_free (tramp_infos);
+	tramp_infos = NULL;
 }
 
 /* Register trampolines created before the root domain was created in the jit info tables */
@@ -4063,6 +4064,7 @@ mini_cleanup (MonoDomain *domain)
 
 #ifndef MONO_CROSS_COMPILE
 	mono_domain_free (domain, TRUE);
+	domain = NULL;
 #endif
 
 #ifdef ENABLE_LLVM
@@ -4077,7 +4079,9 @@ mini_cleanup (MonoDomain *domain)
 	mono_unwind_cleanup ();
 
 	mono_code_manager_destroy (global_codeman);
+	global_codeman = NULL;
 	g_free (vtable_trampolines);
+	vtable_trampolines = NULL;
 
 	mini_jit_cleanup ();
 

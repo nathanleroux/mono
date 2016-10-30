@@ -1571,6 +1571,7 @@ mono_metadata_cleanup (void)
 	g_ptr_array_free (image_sets, TRUE);
 	image_sets = NULL;
 	mono_os_mutex_destroy (&image_sets_mutex);
+	mscorlib_image_set = NULL;
 }
 
 /**

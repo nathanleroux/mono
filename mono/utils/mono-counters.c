@@ -653,6 +653,8 @@ mono_counters_cleanup (void)
 	}
 
 	mono_os_mutex_unlock (&counters_mutex);
+
+	initialized = FALSE;
 }
 
 static MonoResourceCallback limit_reached = NULL;

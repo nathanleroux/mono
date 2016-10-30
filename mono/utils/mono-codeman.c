@@ -158,6 +158,7 @@ codechunk_cleanup (void)
 		g_slist_free (freelist);
 	}
 	g_hash_table_destroy (valloc_freelists);
+	valloc_freelists = NULL;
 }
 
 void

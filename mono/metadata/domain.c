@@ -503,10 +503,11 @@ mono_domain_create (void)
  *
  * Returns: the initial domain.
  */
+static MonoDomain *init_internal_domain = NULL;
+
 static MonoDomain *
 mono_init_internal (const char *filename, const char *exe_filename, const char *runtime_version)
 {
-	static MonoDomain *domain = NULL;
 	MonoAssembly *ass = NULL;
 	MonoImageOpenStatus status = MONO_IMAGE_OK;
 	const MonoRuntimeInfo* runtimes [G_N_ELEMENTS (supported_runtimes) + 1];
@@ -516,7 +517,7 @@ mono_init_internal (const char *filename, const char *exe_filename, const char *
 	debug_domain_unload = TRUE;
 #endif
 
-	if (domain)
+	if (init_internal_domain)
 		g_assert_not_reached ();
 
 #ifdef HOST_WIN32
@@ -556,10 +557,10 @@ mono_init_internal (const char *filename, const char *exe_filename, const char *
 	/* FIXME: When should we release this memory? */
 	MONO_GC_REGISTER_ROOT_FIXED (appdomains_list, MONO_ROOT_SOURCE_DOMAIN, "domains list");
 
-	domain = mono_domain_create ();
-	mono_root_domain = domain;
+	init_internal_domain = mono_domain_create ();
+	mono_root_domain = init_internal_domain;
 
-	SET_APPDOMAIN (domain);
+	SET_APPDOMAIN (init_internal_domain);
 	
 	/* Get a list of runtimes supported by the exe */
 	if (exe_filename != NULL) {
@@ -803,11 +804,11 @@ mono_init_internal (const char *filename, const char *exe_filename, const char *
 	mono_defaults.threadpool_perform_wait_callback_method = mono_class_get_method_from_name (
 		mono_defaults.threadpool_wait_callback_class, "PerformWaitCallback", 0);
 
-	domain->friendly_name = g_path_get_basename (filename);
+	init_internal_domain->friendly_name = g_path_get_basename (filename);
 
-	mono_profiler_appdomain_name (domain, domain->friendly_name);
+	mono_profiler_appdomain_name (init_internal_domain, init_internal_domain->friendly_name);
 
-	return domain;
+	return init_internal_domain;
 }
 
 /**
@@ -894,6 +895,8 @@ mono_cleanup (void)
 #ifndef HOST_WIN32
 	wapi_cleanup ();
 #endif
+
+	init_internal_domain = NULL;
 }
 
 void

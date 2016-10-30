@@ -2355,9 +2355,15 @@ void
 mono_aot_cleanup (void)
 {
 	if (aot_jit_icall_hash)
-		g_hash_table_destroy (aot_jit_icall_hash);
+	{
+		g_hash_table_destroy(aot_jit_icall_hash);
+		aot_jit_icall_hash = NULL;
+	}
 	if (aot_modules)
-		g_hash_table_destroy (aot_modules);
+	{
+		g_hash_table_destroy(aot_modules);
+		aot_modules = NULL;
+	}
 }
 
 static gboolean

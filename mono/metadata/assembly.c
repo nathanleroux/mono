@@ -539,7 +539,9 @@ mono_assembly_setrootdir (const char *root_dir)
 	/*
 	 * Override the MONO_ASSEMBLIES directory configured at compile time.
 	 */
-	/* Leak if called more than once */
+	if (default_path[0] != NULL)
+		free(default_path[0]);
+
 	default_path [0] = g_strdup (root_dir);
 }
 
@@ -1262,6 +1264,8 @@ free_assembly_load_hooks (void)
 		next = hook->next;
 		g_free (hook);
 	}
+
+	assembly_load_hook = NULL;
 }
 
 typedef struct AssemblySearchHook AssemblySearchHook;
@@ -1351,6 +1355,8 @@ free_assembly_search_hooks (void)
 		next = hook->next;
 		g_free (hook);
 	}
+
+	assembly_search_hook = NULL;
 }
 
 void
@@ -1453,6 +1459,9 @@ free_assembly_preload_hooks (void)
 		next = hook->next;
 		g_free (hook);
 	}
+
+	assembly_preload_hook = NULL;
+	assembly_refonly_preload_hook = NULL;
 }
 
 static gchar *
@@ -3433,10 +3442,13 @@ mono_assemblies_cleanup (void)
 		g_free (info);
 	}
 	g_slist_free (loaded_assembly_bindings);
+	loaded_assembly_bindings = NULL;
 
 	free_assembly_load_hooks ();
 	free_assembly_search_hooks ();
 	free_assembly_preload_hooks ();
+
+	corlib = NULL;
 }
 
 /*LOCKING takes the assembly_binding lock*/

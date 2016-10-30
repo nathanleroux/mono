@@ -88,11 +88,11 @@ global_loader_data_unlock (void)
 	mono_locks_os_release (&global_loader_data_mutex, LoaderGlobalDataLock);
 }
 
+static gboolean inited;
+
 void
 mono_loader_init ()
 {
-	static gboolean inited;
-
 	if (!inited) {
 		mono_coop_mutex_init_recursive (&loader_mutex);
 		mono_os_mutex_init_recursive (&global_loader_data_mutex);
@@ -123,7 +123,9 @@ mono_loader_cleanup (void)
 
 	mono_coop_mutex_destroy (&loader_mutex);
 	mono_os_mutex_destroy (&global_loader_data_mutex);
-	loader_lock_inited = FALSE;	
+	loader_lock_inited = FALSE;
+
+	inited = FALSE;
 }
 
 /*

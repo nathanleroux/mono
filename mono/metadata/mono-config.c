@@ -470,6 +470,7 @@ mono_config_cleanup (void)
 	if (config_handlers)
 		g_hash_table_destroy (config_handlers);
 	g_free (mono_cfg_dir_allocated);
+	mono_cfg_dir_allocated = NULL;
 }
 
 /* FIXME: error handling */
@@ -673,6 +674,9 @@ void
 mono_set_config_dir (const char *dir)
 {
 	/* If this variable is set, overrides the directory computed */
+	if (mono_cfg_dir_allocated != NULL)
+		free(mono_cfg_dir_allocated);
+
 	mono_cfg_dir = g_getenv ("MONO_CFG_DIR");
 	if (mono_cfg_dir == NULL)
 		mono_cfg_dir = mono_cfg_dir_allocated = g_strdup (dir);

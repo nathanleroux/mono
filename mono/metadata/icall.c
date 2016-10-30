@@ -8612,6 +8612,10 @@ mono_icall_cleanup (void)
 	g_hash_table_destroy (jit_icall_hash_name);
 	g_hash_table_destroy (jit_icall_hash_addr);
 	mono_os_mutex_destroy (&icall_mutex);
+
+	icall_hash = NULL;
+	jit_icall_hash_name = NULL;
+	jit_icall_hash_addr = NULL;
 }
 
 /**
