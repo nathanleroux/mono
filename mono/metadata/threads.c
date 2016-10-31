@@ -542,11 +542,11 @@ get_context_static_data (MonoAppContext *ctx, guint32 offset)
 	return ((char *) ctx->static_data [idx]) + off;
 }
 
+static MonoClassField *current_thread_field = NULL;
+
 static MonoThread**
 get_current_thread_ptr_for_domain (MonoDomain *domain, MonoInternalThread *thread)
 {
-	static MonoClassField *current_thread_field = NULL;
-
 	guint32 offset;
 
 	if (!current_thread_field) {
@@ -3169,6 +3169,18 @@ remove_and_abort_threads (gpointer key, gpointer value, gpointer user)
 
 	return !mono_native_thread_id_equals (thread_get_tid (thread), self)
 	        && !mono_gc_is_finalizer_internal_thread (thread);
+}
+
+/**
+* mono_threads_set_shutting_down:
+*
+* Is called at init to clear the shutting down flag.
+*/
+void
+mono_threads_clear_shutting_down(void)
+{
+	current_thread_field = NULL;
+	shutting_down = FALSE;
 }
 
 /** 

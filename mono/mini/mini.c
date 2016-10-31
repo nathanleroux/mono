@@ -4397,6 +4397,10 @@ mini_jit_cleanup (void)
 #ifndef DISABLE_JIT
 	g_free (emul_opcode_map);
 	g_free (emul_opcode_opcodes);
+	emul_opcode_num = 0;
+	emul_opcode_alloced = 0;
+	emul_opcode_map = NULL;
+	emul_opcode_opcodes = NULL;
 #endif
 }
 

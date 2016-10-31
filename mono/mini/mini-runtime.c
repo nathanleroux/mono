@@ -3491,6 +3491,8 @@ mini_init (const char *filename, const char *runtime_version)
 	}
 #endif
 
+	mono_threads_clear_shutting_down();
+
 	mono_os_mutex_init_recursive (&jit_mutex);
 
 	mono_cross_helpers_run ();
@@ -4096,6 +4098,7 @@ mini_cleanup (MonoDomain *domain)
 	mono_trace_cleanup ();
 
 	mono_counters_dump (MONO_COUNTER_SECTION_MASK | MONO_COUNTER_MONOTONIC, stdout);
+	mono_counters_cleanup();
 
 	if (mono_inject_async_exc_method)
 		mono_method_desc_free (mono_inject_async_exc_method);

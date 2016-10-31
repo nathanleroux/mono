@@ -7,6 +7,7 @@ int mono_compile_assembly (MonoAssembly *ass, guint32 opts, const char *aot_opti
 void* mono_aot_readonly_field_override (MonoClassField *field);
 gboolean mono_aot_is_shared_got_offset (int offset) MONO_LLVM_INTERNAL;
 
+void     mono_aot_set_binutils_prefix(const char * prefix);
 guint32  mono_aot_get_got_offset            (MonoJumpInfo *ji) MONO_LLVM_INTERNAL;
 char*    mono_aot_get_method_name           (MonoCompile *cfg) MONO_LLVM_INTERNAL;
 char*    mono_aot_get_mangled_method_name   (MonoMethod *method) MONO_LLVM_INTERNAL;

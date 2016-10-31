@@ -19,7 +19,7 @@ gimme () {
 static void main_function (MonoDomain *domain, const char *file, int argc, char** argv)
 {
 	MonoAssembly *assembly;
-
+	
 	assembly = mono_domain_assembly_open (domain, file);
 	if (!assembly)
 		exit (2);

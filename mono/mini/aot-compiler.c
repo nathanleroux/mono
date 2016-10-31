@@ -9795,6 +9795,13 @@ compile_methods (MonoAotCompile *acfg)
 	}
 }
 
+static const char * binutils_prefix = NULL;
+void mono_aot_set_binutils_prefix(const char * prefix)
+{
+	free(binutils_prefix);
+	binutils_prefix = g_strdup(prefix);
+}
+
 static int
 compile_asm (MonoAotCompile *acfg)
 {
@@ -9802,6 +9809,9 @@ compile_asm (MonoAotCompile *acfg)
 	char *outfile_name, *tmp_outfile_name, *llvm_ofile;
 	const char *tool_prefix = acfg->aot_opts.tool_prefix ? acfg->aot_opts.tool_prefix : "";
 	char *ld_flags = acfg->aot_opts.ld_flags ? acfg->aot_opts.ld_flags : g_strdup("");
+
+	if (binutils_prefix)
+		tool_prefix = binutils_prefix;
 
 #if defined(TARGET_AMD64) && !defined(TARGET_MACH)
 #define AS_OPTIONS "--64"

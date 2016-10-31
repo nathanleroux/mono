@@ -5,7 +5,7 @@
 #include "mono/utils/mono-dl-fallback.h"
 
 #ifdef TARGET_WIN32
-#define MONO_SOLIB_EXT ".dll"
+#define MONO_SOLIB_EXT ".ni"
 #elif defined(__ppc__) && defined(TARGET_MACH)
 #define MONO_SOLIB_EXT ".dylib"
 #elif defined(TARGET_MACH) && defined(TARGET_X86) && !defined(__native_client_codegen__)
