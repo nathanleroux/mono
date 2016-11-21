@@ -185,6 +185,8 @@ mono_save_seq_point_info (MonoCompile *cfg)
 
 	g_ptr_array_free (cfg->seq_points, TRUE);
 	cfg->seq_points = NULL;
+
+	g_free(seq_points);
 }
 
 MonoSeqPointInfo*

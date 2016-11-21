@@ -158,8 +158,15 @@ static MonoMethodSignature *helper_sig_llvmonly_imt_thunk;
 
 
 /* type loading helpers */
-static GENERATE_GET_CLASS_WITH_CACHE (runtime_helpers, System.Runtime.CompilerServices, RuntimeHelpers)
-static GENERATE_TRY_GET_CLASS_WITH_CACHE (debuggable_attribute, System.Diagnostics, DebuggableAttribute)
+GENERATE_GET_CLASS_WITH_CACHE (runtime_helpers, System.Runtime.CompilerServices, RuntimeHelpers)
+GENERATE_TRY_GET_CLASS_WITH_CACHE (debuggable_attribute, System.Diagnostics, DebuggableAttribute)
+
+void methodtoir_clear_class_cache(void)
+{
+	GENERATE_CLEAR_CLASS_CACHE(runtime_helpers);
+	GENERATE_CLEAR_CLASS_CACHE(debuggable_attribute);
+}
+
 
 /*
  * Instruction metadata

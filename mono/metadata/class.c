@@ -3042,15 +3042,16 @@ fill_valuetype_array_derived_types (MonoClass **valuetype_types, MonoClass *ecla
  * 
  * Fixing this should kill quite some code, save some bits and improve compatibility.
  */
+static MonoClass* generic_icollection_class = NULL;
+static MonoClass* generic_ienumerable_class = NULL;
+static MonoClass* generic_ienumerator_class = NULL;
+static MonoClass* generic_ireadonlylist_class = NULL;
+static MonoClass* generic_ireadonlycollection_class = NULL;
+
 static MonoClass**
 get_implicit_generic_array_interfaces (MonoClass *klass, int *num, int *is_enumerator)
 {
 	MonoClass *eclass = klass->element_class;
-	static MonoClass* generic_icollection_class = NULL;
-	static MonoClass* generic_ienumerable_class = NULL;
-	static MonoClass* generic_ienumerator_class = NULL;
-	static MonoClass* generic_ireadonlylist_class = NULL;
-	static MonoClass* generic_ireadonlycollection_class = NULL;
 	MonoClass *valuetype_types[2] = { NULL, NULL };
 	MonoClass **interfaces = NULL;
 	int i, nifaces, interface_count, real_count, original_rank;
@@ -9940,6 +9941,25 @@ mono_classes_cleanup (void)
 		mono_bitset_free (global_interface_bitset);
 	global_interface_bitset = NULL;
 	mono_os_mutex_destroy (&classes_mutex);
+
+	generic_icollection_class = NULL;
+	generic_ienumerable_class = NULL;
+	generic_ienumerator_class = NULL;
+	generic_ireadonlylist_class = NULL;
+	generic_ireadonlycollection_class = NULL;
+
+	generic_array_method_info = NULL;
+	generic_array_method_num = 0;
+
+	ghc_slot = -1;
+	finalize_slot = -1;
+	default_ghc = default_finalize = NULL;
+
+	if (global_interface_bitset)
+	{
+		mono_bitset_free(global_interface_bitset);
+		global_interface_bitset = NULL;
+	}
 }
 
 /**
@@ -10778,3 +10798,8 @@ mono_class_full_name (MonoClass *klass)
 
 /* Declare all shared lazy type lookup functions */
 GENERATE_TRY_GET_CLASS_WITH_CACHE (safehandle, System.Runtime.InteropServices, SafeHandle)
+
+void class_clear_class_cache(void)
+{
+	GENERATE_CLEAR_CLASS_CACHE(safehandle);
+}

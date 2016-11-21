@@ -222,25 +222,48 @@ static void init_type_builder_generics (MonoObject *type, MonoError *error);
 #define ADD_IS_GREATER_OR_OVF(a, b, c) (((a) + (b) > (c)) || CHECK_ADD4_OVERFLOW_UN (a, b))
 
 /* Class lazy loading functions */
-static GENERATE_GET_CLASS_WITH_CACHE (mono_assembly, System.Reflection, MonoAssembly)
-static GENERATE_GET_CLASS_WITH_CACHE (mono_module, System.Reflection, MonoModule)
-static GENERATE_GET_CLASS_WITH_CACHE (mono_generic_method, System.Reflection, MonoGenericMethod);
-static GENERATE_GET_CLASS_WITH_CACHE (mono_generic_cmethod, System.Reflection, MonoGenericCMethod);
-static GENERATE_GET_CLASS_WITH_CACHE (mono_method, System.Reflection, MonoMethod);
-static GENERATE_GET_CLASS_WITH_CACHE (mono_cmethod, System.Reflection, MonoCMethod);
-static GENERATE_GET_CLASS_WITH_CACHE (mono_field, System.Reflection, MonoField);
-static GENERATE_GET_CLASS_WITH_CACHE (mono_event, System.Reflection, MonoEvent);
-static GENERATE_GET_CLASS_WITH_CACHE (mono_property, System.Reflection, MonoProperty);
-static GENERATE_GET_CLASS_WITH_CACHE (mono_parameter_info, System.Reflection, MonoParameterInfo);
-static GENERATE_GET_CLASS_WITH_CACHE (missing, System.Reflection, Missing);
-static GENERATE_GET_CLASS_WITH_CACHE (method_body, System.Reflection, MethodBody);
-static GENERATE_GET_CLASS_WITH_CACHE (local_variable_info, System.Reflection, LocalVariableInfo);
-static GENERATE_GET_CLASS_WITH_CACHE (exception_handling_clause, System.Reflection, ExceptionHandlingClause);
-static GENERATE_GET_CLASS_WITH_CACHE (custom_attribute_typed_argument, System.Reflection, CustomAttributeTypedArgument);
-static GENERATE_GET_CLASS_WITH_CACHE (custom_attribute_named_argument, System.Reflection, CustomAttributeNamedArgument);
-static GENERATE_GET_CLASS_WITH_CACHE (type_builder, System.Reflection.Emit, TypeBuilder);
-static GENERATE_GET_CLASS_WITH_CACHE (marshal_as_attribute, System.Runtime.InteropServices, MarshalAsAttribute);
-static GENERATE_GET_CLASS_WITH_CACHE (dbnull, System, DBNull);
+GENERATE_GET_CLASS_WITH_CACHE (mono_assembly, System.Reflection, MonoAssembly)
+GENERATE_GET_CLASS_WITH_CACHE (mono_module, System.Reflection, MonoModule)
+GENERATE_GET_CLASS_WITH_CACHE (mono_generic_method, System.Reflection, MonoGenericMethod);
+GENERATE_GET_CLASS_WITH_CACHE (mono_generic_cmethod, System.Reflection, MonoGenericCMethod);
+GENERATE_GET_CLASS_WITH_CACHE (mono_method, System.Reflection, MonoMethod);
+GENERATE_GET_CLASS_WITH_CACHE (mono_cmethod, System.Reflection, MonoCMethod);
+GENERATE_GET_CLASS_WITH_CACHE (mono_field, System.Reflection, MonoField);
+GENERATE_GET_CLASS_WITH_CACHE (mono_event, System.Reflection, MonoEvent);
+GENERATE_GET_CLASS_WITH_CACHE (mono_property, System.Reflection, MonoProperty);
+GENERATE_GET_CLASS_WITH_CACHE (mono_parameter_info, System.Reflection, MonoParameterInfo);
+GENERATE_GET_CLASS_WITH_CACHE (missing, System.Reflection, Missing);
+GENERATE_GET_CLASS_WITH_CACHE (method_body, System.Reflection, MethodBody);
+GENERATE_GET_CLASS_WITH_CACHE (local_variable_info, System.Reflection, LocalVariableInfo);
+GENERATE_GET_CLASS_WITH_CACHE (exception_handling_clause, System.Reflection, ExceptionHandlingClause);
+GENERATE_GET_CLASS_WITH_CACHE (custom_attribute_typed_argument, System.Reflection, CustomAttributeTypedArgument);
+GENERATE_GET_CLASS_WITH_CACHE (custom_attribute_named_argument, System.Reflection, CustomAttributeNamedArgument);
+GENERATE_GET_CLASS_WITH_CACHE (type_builder, System.Reflection.Emit, TypeBuilder);
+GENERATE_GET_CLASS_WITH_CACHE (marshal_as_attribute, System.Runtime.InteropServices, MarshalAsAttribute);
+GENERATE_GET_CLASS_WITH_CACHE (dbnull, System, DBNull);
+
+void reflection_clear_class_cache(void)
+{
+	GENERATE_CLEAR_CLASS_CACHE(mono_assembly);
+	GENERATE_CLEAR_CLASS_CACHE(mono_module);
+	GENERATE_CLEAR_CLASS_CACHE(mono_generic_method);
+	GENERATE_CLEAR_CLASS_CACHE(mono_generic_cmethod);
+	GENERATE_CLEAR_CLASS_CACHE(mono_method);
+	GENERATE_CLEAR_CLASS_CACHE(mono_cmethod);
+	GENERATE_CLEAR_CLASS_CACHE(mono_field);
+	GENERATE_CLEAR_CLASS_CACHE(mono_event);
+	GENERATE_CLEAR_CLASS_CACHE(mono_property);
+	GENERATE_CLEAR_CLASS_CACHE(mono_parameter_info);
+	GENERATE_CLEAR_CLASS_CACHE(missing);
+	GENERATE_CLEAR_CLASS_CACHE(method_body);
+	GENERATE_CLEAR_CLASS_CACHE(local_variable_info);
+	GENERATE_CLEAR_CLASS_CACHE(exception_handling_clause);
+	GENERATE_CLEAR_CLASS_CACHE(custom_attribute_typed_argument);
+	GENERATE_CLEAR_CLASS_CACHE(custom_attribute_named_argument);
+	GENERATE_CLEAR_CLASS_CACHE(type_builder);
+	GENERATE_CLEAR_CLASS_CACHE(marshal_as_attribute);
+	GENERATE_CLEAR_CLASS_CACHE(dbnull);
+}
 
 // The dynamic images list is only needed to support the mempool reference tracking feature in checked-build.
 static GPtrArray *dynamic_images;

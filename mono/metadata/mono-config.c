@@ -622,6 +622,7 @@ mono_config_for_assembly (MonoImage *assembly)
 		const char *home = g_get_home_dir ();
 		cfg = g_build_filename (home, ".mono", "assemblies", aname, cfg_name, NULL);
 		got_it += mono_config_parse_file_with_context (&state, cfg);
+		g_free(home);
 		g_free (cfg);
 #endif
 		g_free (aname);

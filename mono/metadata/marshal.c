@@ -204,10 +204,18 @@ static void
 mono_marshal_ftnptr_eh_callback (guint32 gchandle);
 
 /* Lazy class loading functions */
-static GENERATE_GET_CLASS_WITH_CACHE (string_builder, System.Text, StringBuilder)
-static GENERATE_GET_CLASS_WITH_CACHE (date_time, System, DateTime)
-static GENERATE_TRY_GET_CLASS_WITH_CACHE (unmanaged_function_pointer_attribute, System.Runtime.InteropServices, UnmanagedFunctionPointerAttribute)
-static GENERATE_TRY_GET_CLASS_WITH_CACHE (icustom_marshaler, System.Runtime.InteropServices, ICustomMarshaler)
+GENERATE_GET_CLASS_WITH_CACHE (string_builder, System.Text, StringBuilder)
+GENERATE_GET_CLASS_WITH_CACHE (date_time, System, DateTime)
+GENERATE_TRY_GET_CLASS_WITH_CACHE (unmanaged_function_pointer_attribute, System.Runtime.InteropServices, UnmanagedFunctionPointerAttribute)
+GENERATE_TRY_GET_CLASS_WITH_CACHE (icustom_marshaler, System.Runtime.InteropServices, ICustomMarshaler)
+
+void marshal_clear_class_cache(void)
+{
+	GENERATE_CLEAR_CLASS_CACHE(string_builder);
+	GENERATE_CLEAR_CLASS_CACHE(date_time);
+	GENERATE_CLEAR_CLASS_CACHE(unmanaged_function_pointer_attribute);
+	GENERATE_CLEAR_CLASS_CACHE(icustom_marshaler);
+}
 
 /* MonoMethod pointers to SafeHandle::DangerousAddRef and ::DangerousRelease */
 static MonoMethod *sh_dangerous_add_ref;
@@ -276,11 +284,11 @@ ves_icall_mono_string_to_utf8 (MonoString *str)
 	return result;
 }
 
+static gboolean module_initialized = FALSE;
+
 void
 mono_marshal_init (void)
 {
-	static gboolean module_initialized = FALSE;
-
 	if (!module_initialized) {
 		module_initialized = TRUE;
 		mono_os_mutex_init_recursive (&marshal_mutex);
@@ -348,11 +356,13 @@ void
 mono_marshal_cleanup (void)
 {
 	mono_cominterop_cleanup ();
-
+	
 	mono_native_tls_free (load_type_info_tls_id);
 	mono_native_tls_free (last_error_tls_id);
 	mono_os_mutex_destroy (&marshal_mutex);
 	marshal_mutex_initialized = FALSE;
+
+	module_initialized = FALSE;
 }
 
 void

@@ -422,7 +422,7 @@ sgen_alloc_os_memory_aligned (size_t size, mword alignment, SgenAllocFlags flags
 void
 sgen_free_os_memory (void *addr, size_t size, SgenAllocFlags flags)
 {
-	g_assert (!(flags & ~SGEN_ALLOC_HEAP));
+	g_assert (!(flags & ~(SGEN_ALLOC_HEAP | SGEN_ALLOC_ACTIVATE)));
 
 	mono_vfree (addr, size);
 	SGEN_ATOMIC_ADD_P (total_alloc, -(gssize)size);

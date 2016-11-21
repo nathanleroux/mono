@@ -1206,7 +1206,12 @@ mini_jit_info_table_find (MonoDomain *domain, char *addr, MonoDomain **out_domai
 }
 
 /* Class lazy loading functions */
-static GENERATE_GET_CLASS_WITH_CACHE (runtime_compat_attr, System.Runtime.CompilerServices, RuntimeCompatibilityAttribute)
+GENERATE_GET_CLASS_WITH_CACHE (runtime_compat_attr, System.Runtime.CompilerServices, RuntimeCompatibilityAttribute)
+
+void mini_exceptions_clear_class_cache(void)
+{
+	GENERATE_CLEAR_CLASS_CACHE(runtime_compat_attr);
+}
 
 /*
  * wrap_non_exception_throws:

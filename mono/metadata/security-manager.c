@@ -11,8 +11,14 @@
 #include "security-manager.h"
 
 /* Class lazy loading functions */
-static GENERATE_GET_CLASS_WITH_CACHE (security_manager, System.Security, SecurityManager)
-static GENERATE_TRY_GET_CLASS_WITH_CACHE (execution_context, System.Threading, ExecutionContext)
+GENERATE_GET_CLASS_WITH_CACHE (security_manager, System.Security, SecurityManager)
+GENERATE_TRY_GET_CLASS_WITH_CACHE (execution_context, System.Threading, ExecutionContext)
+
+void security2_clear_class_cache()
+{
+	GENERATE_CLEAR_CLASS_CACHE(security_manager);
+	GENERATE_CLEAR_CLASS_CACHE(execution_context);
+}
 
 static MonoSecurityMode mono_security_mode = MONO_SECURITY_MODE_NONE;
 

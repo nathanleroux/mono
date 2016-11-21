@@ -44,6 +44,10 @@
 #include <metadata/profiler-private.h>
 #include <mono/metadata/coree.h>
 
+#undef HAVE_SGEN_GC
+#include <mono/mini/mini.h>
+#define HAVE_SGEN_GC
+
 static MonoJitInfoFindInAot jit_info_find_in_aot_func = NULL;
 
 #define JIT_INFO_TABLE_FILL_RATIO_NOM		3
@@ -101,6 +105,39 @@ mono_jit_info_table_new (MonoDomain *domain)
 }
 
 void
+mono_jit_info_table_free_trampolines(MonoJitInfoTable *table)
+{
+	int num_chunks = table->num_chunks;
+
+	for (int i = 0; i < num_chunks; ++i)
+	{
+		MonoJitInfoTableChunk *chunk = table->chunks[i];
+
+		if (chunk->refcount > 1)
+			continue;
+
+		for (int j = 0; j < chunk->num_elements; j++)
+		{
+			MonoJitInfo *ji = chunk->data[j];
+
+			if (ji->is_trampoline)
+			{
+				MonoTrampInfo *ti = (MonoTrampInfo*)ji->d.tramp_info;
+				if (ti && ti->deleteme)
+				{
+					if (ti->uw_info)
+						g_free(ti->uw_info);
+
+					g_free(ti);
+
+					ji->d.tramp_info = NULL;
+				}
+			}
+		}
+	}
+}
+
+void
 mono_jit_info_table_free (MonoJitInfoTable *table)
 {
 	int i;
@@ -114,7 +151,9 @@ mono_jit_info_table_free (MonoJitInfoTable *table)
 		GSList *list;
 
 		for (list = table->domain->jit_info_free_queue; list; list = list->next)
-			g_free (list->data);
+		{
+			g_free(list->data);
+		}
 
 		g_slist_free (table->domain->jit_info_free_queue);
 		table->domain->jit_info_free_queue = NULL;
@@ -133,6 +172,7 @@ mono_jit_info_table_free (MonoJitInfoTable *table)
 
 		for (tombstone = chunk->next_tombstone; tombstone; ) {
 			MonoJitInfo *next = tombstone->n.next_tombstone;
+
 			g_free (tombstone);
 			tombstone = next;
 		}

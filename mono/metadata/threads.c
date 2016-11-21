@@ -221,7 +221,12 @@ static gboolean shutting_down = FALSE;
 static gint32 managed_thread_id_counter = 0;
 
 /* Class lazy loading functions */
-static GENERATE_GET_CLASS_WITH_CACHE (appdomain_unloaded_exception, System, AppDomainUnloadedException)
+GENERATE_GET_CLASS_WITH_CACHE (appdomain_unloaded_exception, System, AppDomainUnloadedException)
+
+void threads_clear_class_cache()
+{
+	GENERATE_CLEAR_CLASS_CACHE(appdomain_unloaded_exception);
+}
 
 static void
 mono_threads_lock (void)

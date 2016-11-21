@@ -269,6 +269,7 @@ enum {
 };
 
 void sgen_gc_init (void);
+void sgen_gc_cleanup (void);
 
 void sgen_os_init (void);
 

@@ -95,8 +95,21 @@ GENERATE_GET_CLASS_WITH_CACHE (iunknown,      Mono.Interop, IUnknown)
 GENERATE_GET_CLASS_WITH_CACHE (com_object, System, __ComObject)
 GENERATE_GET_CLASS_WITH_CACHE (variant,    System, Variant)
 
-static GENERATE_GET_CLASS_WITH_CACHE (interface_type_attribute, System.Runtime.InteropServices, InterfaceTypeAttribute)
-static GENERATE_GET_CLASS_WITH_CACHE (guid_attribute, System.Runtime.InteropServices, GuidAttribute)
+GENERATE_GET_CLASS_WITH_CACHE (interface_type_attribute, System.Runtime.InteropServices, InterfaceTypeAttribute)
+GENERATE_GET_CLASS_WITH_CACHE (guid_attribute, System.Runtime.InteropServices, GuidAttribute)
+
+void cominterop_clear_class_cache(void)
+{
+	GENERATE_CLEAR_CLASS_CACHE(interop_proxy);
+	GENERATE_CLEAR_CLASS_CACHE(idispatch);
+	GENERATE_CLEAR_CLASS_CACHE(iunknown);
+
+	GENERATE_CLEAR_CLASS_CACHE(com_object);
+	GENERATE_CLEAR_CLASS_CACHE(variant);
+
+	GENERATE_CLEAR_CLASS_CACHE(interface_type_attribute);
+	GENERATE_CLEAR_CLASS_CACHE(guid_attribute);
+}
 
 /* Upon creation of a CCW, only allocate a weak handle and set the
  * reference count to 0. If the unmanaged client code decides to addref and

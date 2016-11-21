@@ -1140,7 +1140,7 @@ MonoRemoteClass*
 mono_remote_class (MonoDomain *domain, MonoString *class_name, MonoClass *proxy_class, MonoError *error);
 
 void
-mono_install_remoting_trampoline (MonoRemotingTrampoline func);
+mono_install_remoting_trampoline(MonoRemotingTrampoline func);
 
 #define mono_class_is_transparent_proxy(klass) ((klass) == mono_defaults.transparent_proxy_class)
 #define mono_class_is_real_proxy(klass) ((klass) == mono_defaults.real_proxy_class)
@@ -1154,31 +1154,34 @@ MonoClass* mono_class_get_##shortname##_class (void);
 #define GENERATE_TRY_GET_CLASS_WITH_CACHE_DECL(shortname) \
 MonoClass* mono_class_try_get_##shortname##_class (void);
 
+#define GENERATE_CLEAR_CLASS_CACHE(shortname) \
+    tmp_class_##shortname = NULL;
+
 #define GENERATE_GET_CLASS_WITH_CACHE(shortname,namespace,name) \
+static MonoClass *tmp_class_##shortname;	\
 MonoClass*	\
 mono_class_get_##shortname##_class (void)	\
 {	\
-	static MonoClass *tmp_class;	\
-	MonoClass *klass = tmp_class;	\
+	MonoClass *klass = tmp_class_##shortname;	\
 	if (!klass) {	\
 		klass = mono_class_load_from_name (mono_defaults.corlib, #namespace, #name);	\
 		mono_memory_barrier ();	\
-		tmp_class = klass;	\
+		tmp_class_##shortname = klass;	\
 	}	\
 	return klass;	\
 }
 
 #define GENERATE_TRY_GET_CLASS_WITH_CACHE(shortname,namespace,name) \
+static volatile MonoClass *tmp_class_##shortname;	\
 MonoClass*	\
 mono_class_try_get_##shortname##_class (void)	\
 {	\
-	static volatile MonoClass *tmp_class;	\
 	static volatile gboolean inited;	\
-	MonoClass *klass = (MonoClass *)tmp_class;	\
+	MonoClass *klass = (MonoClass *)tmp_class_##shortname;	\
 	mono_memory_barrier ();	\
 	if (!inited) {	\
 		klass = mono_class_try_load_from_name (mono_defaults.corlib, #namespace, #name);	\
-		tmp_class = klass;	\
+		tmp_class_##shortname = klass;	\
 		mono_memory_barrier ();	\
 		inited = TRUE;	\
 	}	\

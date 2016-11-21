@@ -484,6 +484,8 @@ mono_tramp_info_register (MonoTrampInfo *info, MonoDomain *domain)
 
 	mono_save_trampoline_xdebug_info (info);
 
+	copy->deleteme = TRUE;
+
 	/* Only register trampolines that have unwind infos */
 	if (mono_get_root_domain () && copy->uw_info)
 		register_trampoline_jit_info (domain, copy);
@@ -517,6 +519,7 @@ register_trampolines (MonoDomain *domain)
 	for (l = tramp_infos; l; l = l->next) {
 		MonoTrampInfo *info = (MonoTrampInfo *)l->data;
 
+		info->deleteme = FALSE;
 		register_trampoline_jit_info (domain, info);
 	}
 }
@@ -4031,6 +4034,30 @@ print_jit_stats (void)
 	}
 }
 
+extern MonoCoopMutex* gc_mutex;
+
+static void
+class_cache_cleanup(void)
+{
+	object_clear_class_cache();
+	assembly_clear_class_cache();
+	assembly2_clear_class_cache();
+	cominterop_clear_class_cache();
+	icall_clear_class_cache();
+	locales_clear_class_cache();
+	marshal_clear_class_cache();
+	methodtoir_clear_class_cache();
+	mini_exceptions_clear_class_cache();
+	reflection_clear_class_cache();
+	remoting_clear_class_cache();
+	security_clear_class_cache();
+	security2_clear_class_cache();
+	threads_clear_class_cache();
+	verify_clear_class_cache();
+	class_clear_class_cache();
+	mini_generic_clear_class_cache();
+}
+
 void
 mini_cleanup (MonoDomain *domain)
 {
@@ -4108,6 +4135,18 @@ mini_cleanup (MonoDomain *domain)
 	mono_os_mutex_destroy (&jit_mutex);
 
 	mono_code_manager_cleanup ();
+
+	void sgen_clear_fixed_type_frames ();
+	sgen_clear_fixed_type_frames ();
+
+	mono_coop_mutex_destroy (&gc_mutex);
+
+	void sgen_gc_cleanup2 (void);
+	sgen_gc_cleanup2 ();
+
+	mono_thread_smr_cleanup ();
+
+	class_cache_cleanup();
 }
 
 void

@@ -68,9 +68,16 @@ static MonoReflectionType *
 type_from_handle (MonoType *handle);
 
 /* Class lazy loading functions */
-static GENERATE_GET_CLASS_WITH_CACHE (remoting_services, System.Runtime.Remoting, RemotingServices)
-static GENERATE_GET_CLASS_WITH_CACHE (call_context, System.Runtime.Remoting.Messaging, CallContext)
-static GENERATE_GET_CLASS_WITH_CACHE (context, System.Runtime.Remoting.Contexts, Context)
+GENERATE_GET_CLASS_WITH_CACHE (remoting_services, System.Runtime.Remoting, RemotingServices)
+GENERATE_GET_CLASS_WITH_CACHE (call_context, System.Runtime.Remoting.Messaging, CallContext)
+GENERATE_GET_CLASS_WITH_CACHE (context, System.Runtime.Remoting.Contexts, Context)
+
+void remoting_clear_class_cache(void)
+{
+	GENERATE_CLEAR_CLASS_CACHE(remoting_services);
+	GENERATE_CLEAR_CLASS_CACHE(call_context);
+	GENERATE_CLEAR_CLASS_CACHE(context);
+}
 
 static mono_mutex_t remoting_mutex;
 static gboolean remoting_mutex_inited;

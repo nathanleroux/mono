@@ -570,6 +570,15 @@ sgen_card_tables_collect_stats (gboolean begin)
 #endif
 }
 
+void sgen_card_table_free()
+{
+	sgen_free_os_memory(sgen_cardtable, CARD_COUNT_IN_BYTES, (SgenAllocFlags)(SGEN_ALLOC_INTERNAL | SGEN_ALLOC_ACTIVATE));
+
+#ifdef SGEN_HAVE_OVERLAPPING_CARDS
+	sgen_free_os_memory(sgen_shadow_cardtable , CARD_COUNT_IN_BYTES, (SgenAllocFlags)(SGEN_ALLOC_INTERNAL | SGEN_ALLOC_ACTIVATE));
+#endif
+}
+
 void
 sgen_card_table_init (SgenRememberedSet *remset)
 {

@@ -120,7 +120,12 @@ get_shadow_assembly_location_base (MonoDomain *domain, MonoError *error);
 static MonoLoadFunc load_function = NULL;
 
 /* Lazy class loading functions */
-static GENERATE_GET_CLASS_WITH_CACHE (assembly, System.Reflection, Assembly)
+GENERATE_GET_CLASS_WITH_CACHE(assembly, System.Reflection, Assembly)
+
+void assembly_clear_class_cache(void)
+{
+	GENERATE_CLEAR_CLASS_CACHE(assembly);
+}
 
 void
 mono_install_runtime_load (MonoLoadFunc func)
@@ -1471,7 +1476,10 @@ get_shadow_assembly_location_base (MonoDomain *domain, MonoError *error)
 		g_free (appname);
 		g_free (cache_path);
 	} else {
-		userdir = g_strdup_printf ("%s-mono-cachepath", g_get_user_name ());
+		const gchar * username = g_get_user_name ();
+		userdir = g_strdup_printf ("%s-mono-cachepath", username);
+		g_free(username);
+
 		location = g_build_filename (g_get_tmp_dir (), userdir, "assembly", "shadow", NULL);
 		g_free (userdir);
 	}

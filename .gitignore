@@ -38,6 +38,8 @@ obj/
 [Rr]elease*/
 Ankh.NoLoad
 *.gpState
+*.VC.db
+*.VC.VC.opendb
 
 # Tooling
 _ReSharper*/

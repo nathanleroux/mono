@@ -56,7 +56,7 @@ static MonoLockFreeArrayQueue delayed_free_queue = MONO_LOCK_FREE_ARRAY_QUEUE_IN
 
 /* The table for small ID assignment */
 static mono_mutex_t small_id_mutex;
-static int small_id_next;
+static int small_id_next = 0;
 static int highest_small_id = -1;
 static MonoBitSet *small_id_table;
 static int hazardous_pointer_count;
@@ -411,4 +411,8 @@ mono_thread_smr_cleanup (void)
 	mono_lock_free_array_queue_cleanup (&delayed_free_queue);
 
 	/*FIXME, can't we release the small id table here?*/
+	mono_bitset_free(small_id_table);
+	small_id_table = NULL;
+	small_id_next = 0;
+	highest_small_id = -1;
 }

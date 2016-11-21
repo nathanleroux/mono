@@ -54,6 +54,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmonoutils", "libmonoutils.vcxproj", "{8FC2B0C8-51AD-49DF-851F-5D01A77A75E4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmonoruntime", "libmonoruntime.vcxproj", "{C36612BD-22D3-4B95-85E2-7FDC4FC5D739}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8FC2B0C8-51AD-49DF-851F-5D01A77A75E4} = {8FC2B0C8-51AD-49DF-851F-5D01A77A75E4}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MY TEST", "MY TEST", "{28F78A64-9D15-4A1B-B471-3C5C2838E1CE}"
 EndProject
@@ -451,9 +454,9 @@ Global
 		{88AFE0F8-A120-4167-8E4F-797AB7B87123} = {28F78A64-9D15-4A1B-B471-3C5C2838E1CE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaProjectFile = C:\Users\Owner\Development\monogit\mono\msvc\CodeAnalyst\mono.caw
-		AMDCaPersistentStartup = mono
 		AMDCaPersistentConfig = Debug|Win32
+		AMDCaPersistentStartup = mono
+		AMDCaProjectFile = C:\Users\Owner\Development\monogit\mono\msvc\CodeAnalyst\mono.caw
 	EndGlobalSection
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}

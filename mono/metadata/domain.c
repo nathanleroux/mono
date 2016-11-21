@@ -1207,6 +1207,7 @@ mono_domain_free (MonoDomain *domain, gboolean force)
 	if (domain->aot_modules)
 		mono_jit_info_table_free (domain->aot_modules);
 	g_assert (domain->num_jit_info_tables == 1);
+	mono_jit_info_table_free_trampolines (domain->jit_info_table);
 	mono_jit_info_table_free (domain->jit_info_table);
 	domain->jit_info_table = NULL;
 	g_assert (!domain->jit_info_free_queue);

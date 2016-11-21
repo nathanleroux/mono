@@ -1042,6 +1042,8 @@ static gboolean use_managed_allocator = TRUE;
  * require the allocator to be in a few known methods to make sure
  * that they are executed atomically via the restart mechanism.
  */
+static gboolean registered = FALSE;
+
 static MonoMethod*
 create_allocator (int atype, ManagedAllocatorVariant variant)
 {
@@ -1051,7 +1053,6 @@ create_allocator (int atype, ManagedAllocatorVariant variant)
 	MonoMethodBuilder *mb;
 	MonoMethod *res;
 	MonoMethodSignature *csig;
-	static gboolean registered = FALSE;
 	int tlab_next_addr_var, new_next_var;
 	const char *name = NULL;
 	WrapperInfo *info;
@@ -2977,7 +2978,26 @@ mono_gc_base_init (void)
 void
 mono_gc_base_cleanup (void)
 {
+	sgen_gc_cleanup();
 	sgen_thread_pool_shutdown ();
+
+	registered = FALSE;
+	gc_inited = FALSE;
+
+	for (int i = 0; i < ATYPE_NUM; i++)
+	{
+		if (alloc_method_cache[i])
+		{
+			mono_free_method(alloc_method_cache[i]);
+			alloc_method_cache[i] = NULL;
+		}
+		
+		if (slowpath_alloc_method_cache[i])
+		{
+			mono_free_method(slowpath_alloc_method_cache[i]);
+			slowpath_alloc_method_cache[i] = NULL;
+		}
+	}
 }
 
 gboolean

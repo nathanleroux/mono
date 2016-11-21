@@ -63,11 +63,18 @@ static char *
 mono_string_to_utf8_internal (MonoMemPool *mp, MonoImage *image, MonoString *s, gboolean ignore_error, MonoError *error);
 
 /* Class lazy loading functions */
-static GENERATE_GET_CLASS_WITH_CACHE (pointer, System.Reflection, Pointer)
-static GENERATE_GET_CLASS_WITH_CACHE (remoting_services, System.Runtime.Remoting, RemotingServices)
-static GENERATE_GET_CLASS_WITH_CACHE (unhandled_exception_event_args, System, UnhandledExceptionEventArgs)
-static GENERATE_GET_CLASS_WITH_CACHE (sta_thread_attribute, System, STAThreadAttribute)
-static GENERATE_GET_CLASS_WITH_CACHE (activation_services, System.Runtime.Remoting.Activation, ActivationServices)
+GENERATE_GET_CLASS_WITH_CACHE(pointer, System.Reflection, Pointer)
+GENERATE_GET_CLASS_WITH_CACHE(unhandled_exception_event_args, System, UnhandledExceptionEventArgs)
+GENERATE_GET_CLASS_WITH_CACHE(sta_thread_attribute, System, STAThreadAttribute)
+GENERATE_GET_CLASS_WITH_CACHE(activation_services, System.Runtime.Remoting.Activation, ActivationServices)
+
+void object_clear_class_cache(void)
+{
+	GENERATE_CLEAR_CLASS_CACHE(pointer);
+	GENERATE_CLEAR_CLASS_CACHE(unhandled_exception_event_args);
+	GENERATE_CLEAR_CLASS_CACHE(sta_thread_attribute);
+	GENERATE_CLEAR_CLASS_CACHE(activation_services);
+}
 
 
 #define ldstr_lock() mono_os_mutex_lock (&ldstr_section)

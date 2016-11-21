@@ -1230,12 +1230,17 @@ scan_from_registered_roots (char *addr_start, char *addr_end, int root_type, Sca
 	} SGEN_HASH_TABLE_FOREACH_END;
 }
 
+static gboolean stats_inited = FALSE;
+
+static void unload_stats()
+{
+	stats_inited = FALSE;
+}
+
 static void
 init_stats (void)
 {
-	static gboolean inited = FALSE;
-
-	if (inited)
+	if (stats_inited)
 		return;
 
 	mono_counters_register ("Collection max time",  MONO_COUNTER_GC | MONO_COUNTER_ULONG | MONO_COUNTER_TIME | MONO_COUNTER_MONOTONIC, &time_max);
@@ -1288,7 +1293,7 @@ init_stats (void)
 	sgen_nursery_allocator_init_heavy_stats ();
 #endif
 
-	inited = TRUE;
+	stats_inited = TRUE;
 }
 
 
@@ -3153,6 +3158,34 @@ sgen_gc_init (void)
 	gc_initialized = 1;
 
 	sgen_init_bridge ();
+}
+
+void sgen_gc_cleanup2(void)
+{
+	mono_coop_mutex_destroy(&sgen_interruption_mutex);
+
+	roots_size = 0;
+	for (int i = 0; i < ROOT_TYPE_NUM; i++)
+		sgen_hash_table_clean(&roots_hash[i]);
+}
+
+void sgen_gc_cleanup(void)
+{
+#ifdef SGEN_WITHOUT_MONO
+	mono_thread_smr_init();
+#endif
+
+	unload_stats();
+
+	sgen_card_table_free();
+
+	//sgen_deregister_root(NULL);
+
+	roots_size = 0;
+	for (int i = 0; i < ROOT_TYPE_NUM; i++)
+		sgen_hash_table_clean(&roots_hash[i]);
+
+	gc_initialized = 0;
 }
 
 gboolean

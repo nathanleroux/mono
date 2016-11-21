@@ -83,6 +83,12 @@ index_for_size (size_t size)
  */
 static int fixed_type_allocator_indexes [INTERNAL_MEM_MAX];
 
+void sgen_clear_fixed_type_frames()
+{
+	for (int i = 0; i < INTERNAL_MEM_MAX; i++)
+		fixed_type_allocator_indexes[i] = -1;
+}
+
 void
 sgen_register_fixed_internal_mem_type (int type, size_t size)
 {

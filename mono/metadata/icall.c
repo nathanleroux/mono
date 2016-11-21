@@ -111,12 +111,22 @@ extern MonoString* ves_icall_System_Environment_GetOSVersionString (void);
 ICALL_EXPORT MonoReflectionAssembly* ves_icall_System_Reflection_Assembly_GetCallingAssembly (void);
 
 /* Lazy class loading functions */
-static GENERATE_GET_CLASS_WITH_CACHE (system_version, System, Version)
-static GENERATE_GET_CLASS_WITH_CACHE (assembly_name, System.Reflection, AssemblyName)
-static GENERATE_GET_CLASS_WITH_CACHE (constructor_info, System.Reflection, ConstructorInfo)
-static GENERATE_GET_CLASS_WITH_CACHE (property_info, System.Reflection, PropertyInfo)
-static GENERATE_GET_CLASS_WITH_CACHE (event_info, System.Reflection, EventInfo)
-static GENERATE_GET_CLASS_WITH_CACHE (module, System.Reflection, Module)
+GENERATE_GET_CLASS_WITH_CACHE (system_version, System, Version)
+GENERATE_GET_CLASS_WITH_CACHE (assembly_name, System.Reflection, AssemblyName)
+GENERATE_GET_CLASS_WITH_CACHE (constructor_info, System.Reflection, ConstructorInfo)
+GENERATE_GET_CLASS_WITH_CACHE (property_info, System.Reflection, PropertyInfo)
+GENERATE_GET_CLASS_WITH_CACHE (event_info, System.Reflection, EventInfo)
+GENERATE_GET_CLASS_WITH_CACHE (module, System.Reflection, Module)
+
+void icall_clear_class_cache(void)
+{
+	GENERATE_CLEAR_CLASS_CACHE(system_version);
+	GENERATE_CLEAR_CLASS_CACHE(assembly_name);
+	GENERATE_CLEAR_CLASS_CACHE(constructor_info);
+	GENERATE_CLEAR_CLASS_CACHE(property_info);
+	GENERATE_CLEAR_CLASS_CACHE(event_info);
+	GENERATE_CLEAR_CLASS_CACHE(module);
+}
 
 static MonoArray*
 type_array_from_modifiers (MonoImage *image, MonoType *type, int optional, MonoError *error);
