@@ -138,7 +138,7 @@ gpointer g_try_realloc (gpointer obj, gsize size);
 #define g_alloca(size)		alloca (size)
 
 gpointer g_memdup (gconstpointer mem, guint byte_size);
-static inline gchar   *g_strdup (const gchar *str) { if (str) {return strdup (str);} return NULL; }
+static inline gchar   *g_strdup(const gchar *str) { if (!str) return NULL; return strdup(str); }
 gchar **g_strdupv (gchar **str_array);
 
 typedef struct {
@@ -256,7 +256,7 @@ gint    g_ascii_xdigit_value (gchar c);
 #define g_strncasecmp strncasecmp
 #define g_strstrip(a) g_strchug (g_strchomp (a))
 #endif
-#define g_ascii_strdup strdup
+#define g_ascii_strdup g_strdup
 
 
 #define	G_STR_DELIMITERS "_-|> <."

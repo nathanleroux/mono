@@ -128,6 +128,9 @@ g_get_home_dir (void)
 		}
 	}
 
+	g_free(drive);
+	g_free(path);
+
 	return home_dir;
 }
 
